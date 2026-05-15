@@ -1,34 +1,30 @@
-import type { Metadata } from 'next'
-import { Playfair_Display, Poppins } from 'next/font/google'
-import './globals.css'
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { ToastProvider } from '@/components/ToastProvider';
 
-const playfairDisplay = Playfair_Display({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-playfair',
-  weight: ['400', '700', '900'],
-})
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  variable: '--font-poppins',
-  weight: ['300', '400', '500', '600', '700'],
-})
+  variable: '--font-inter',
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700', '800'],
+});
 
 export const metadata: Metadata = {
-  title: 'Home | Mi App TypeScript',
-  description: 'Página principal del sistema — Fullstack TypeScript + Next.js + Vercel',
-}
+  title: 'Playa Alta Inventory',
+  description: 'Control de inventario para el restaurante Playa Alta',
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${playfairDisplay.variable} ${poppins.variable}`}>
-      <body className="bg-gradient-to-b from-gray-950 via-slate-950 to-gray-950 min-h-screen overflow-x-hidden">
-        {children}
+    <html lang="es" className={inter.className}>
+      <body className="min-h-screen bg-[#FEF9F0] text-[#1C1917] antialiased">
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
-  )
+  );
 }

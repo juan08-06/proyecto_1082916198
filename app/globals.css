@@ -3,17 +3,20 @@
 @tailwind utilities;
 
 :root {
-  /* Tipografía */
-  --font-playfair: var(--font-playfair);
-  --font-poppins: var(--font-poppins);
-
-  /* Colores principales */
-  --color-bg-dark: #0f0f0f;
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #a0a0a0;
-  --color-accent-cyan: #06b6d4;
-  --color-accent-purple: #a855f7;
-  --color-accent-pink: #ec4899;
+  --font-inter: var(--font-inter);
+  --color-bg: #FEF9F0;
+  --color-surface: #FFFFFF;
+  --color-primary: #EA580C;
+  --color-primary-dark: #C2410C;
+  --color-primary-light: #FFF7ED;
+  --color-accent: #0C2340;
+  --color-text: #1C1917;
+  --color-text-secondary: #78716C;
+  --color-border: #E7E5E4;
+  --color-success: #16A34A;
+  --color-success-bg: #F0FDF4;
+  --color-warning: #D97706;
+  --color-warning-bg: #FFFBEB;
 }
 
 * {
@@ -27,51 +30,29 @@ html {
 }
 
 body {
-  font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: var(--color-text-primary);
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #16213e 100%);
+  color: var(--color-text);
+  background-color: var(--color-bg);
   min-height: 100vh;
 }
 
-/* Tipografía personalizada */
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
 h1, h2, h3 {
-  font-family: var(--font-playfair);
   font-weight: 700;
 }
 
-h1 {
-  font-size: 4rem;
-  letter-spacing: -0.02em;
+p {
+  line-height: 1.65;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 2.5rem;
-  }
-}
-
-/* Scroll bar personalizado */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(168, 85, 247, 0.5);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(168, 85, 247, 0.8);
-}
-
-/* Animaciones suaves */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
