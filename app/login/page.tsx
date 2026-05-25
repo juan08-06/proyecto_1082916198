@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Inter } from 'next/font/google';
 
@@ -12,6 +12,33 @@ export default function LoginPage() {
   const [password, setPassword] = useState('admin123');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSeedMode, setIsSeedMode] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadMode() {
+      try {
+        const response = await fetch('/api/mode', { cache: 'no-store' });
+        if (!response.ok) {
+          return;
+        }
+
+        const data = await response.json();
+        if (isMounted) {
+          setIsSeedMode(data?.mode === 'seed');
+        }
+      } catch {
+        // Keep default false if mode endpoint is unavailable.
+      }
+    }
+
+    loadMode();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -90,10 +117,12 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="rounded-3xl border border-orange-100 bg-orange-50 p-4 text-sm text-slate-700">
-          <p className="font-semibold text-orange-700">Nota</p>
-          <p>El sistema está en modo seed. El administrador inicial está preconfigurado con los 6 productos demo.</p>
-        </div>
+        {isSeedMode ? (
+          <div className="rounded-3xl border border-orange-100 bg-orange-50 p-4 text-sm text-slate-700">
+            <p className="font-semibold text-orange-700">Nota</p>
+            <p>El sistema está en modo seed. El administrador inicial está preconfigurado con los 6 productos demo.</p>
+          </div>
+        ) : null}
       </section>
     </main>
   );
