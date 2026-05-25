@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { Client } from 'pg';
+import { getPostgresUrl } from './env';
 
 export async function getMigrationFiles() {
   const migrationsFolder = path.join(process.cwd(), 'supabase', 'migrations');
@@ -15,12 +16,15 @@ export async function getMigrationFiles() {
 }
 
 export async function runMigrations() {
-  const databaseUrl = process.env.DATABASE_URL;
+  const databaseUrl = getPostgresUrl();
   if (!databaseUrl) {
     throw new Error('DATABASE_URL no está configurado');
   }
 
-  const client = new Client({ connectionString: databaseUrl });
+  const client = new Client({
+    connectionString: databaseUrl,
+    ssl: { rejectUnauthorized: false },
+  });
   await client.connect();
 
   try {

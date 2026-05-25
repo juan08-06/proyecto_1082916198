@@ -1,7 +1,9 @@
 import { jwtVerify } from 'jose';
 import { NextResponse } from 'next/server';
+import { getJwtSecret } from './lib/env';
 
-const secret = process.env.JWT_SECRET ? new TextEncoder().encode(process.env.JWT_SECRET) : null;
+const jwtSecret = getJwtSecret();
+const secret = jwtSecret ? new TextEncoder().encode(jwtSecret) : null;
 
 export async function middleware(request: Request) {
   const url = new URL(request.url);

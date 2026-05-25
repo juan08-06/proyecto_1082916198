@@ -1,6 +1,15 @@
 import { NextResponse } from 'next/server';
 import { getSystemMode, getProducts } from '@/lib/dataService';
 import { getSeedUsers } from '@/lib/seedReader';
+import {
+  getPostgresUrl,
+  getSupabaseUrl,
+  getSupabaseAnonKey,
+  getSupabaseServiceRoleKey,
+  getJwtSecret,
+} from '@/lib/env';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const mode = getSystemMode();
@@ -11,6 +20,12 @@ export async function GET() {
     mode,
     productsCount: products.length,
     seedUsers: users.map((user) => ({ email: user.email, role: user.role, active: user.active })),
-    hasDatabase: Boolean(process.env.DATABASE_URL),
+    env: {
+      hasPostgresUrl: Boolean(getPostgresUrl()),
+      hasSupabaseUrl: Boolean(getSupabaseUrl()),
+      hasSupabaseAnonKey: Boolean(getSupabaseAnonKey()),
+      hasSupabaseServiceRoleKey: Boolean(getSupabaseServiceRoleKey()),
+      hasJwtSecret: Boolean(getJwtSecret()),
+    },
   });
 }

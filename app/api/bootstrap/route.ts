@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
 import { runMigrations } from '@/lib/pgMigrate';
+import { getPostgresUrl } from '@/lib/env';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST() {
-  if (!process.env.DATABASE_URL) {
+  if (!getPostgresUrl()) {
     return NextResponse.json(
       {
         status: 'seed',

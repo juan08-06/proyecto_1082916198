@@ -16,6 +16,7 @@ import {
   updateSeedUserActive,
 } from './seedReader';
 import { appendAuditEntry, readAuditMonth } from './auditService';
+import { getPostgresUrl } from './env';
 
 /**
  * Función genérica para lectura de archivos JSON
@@ -51,8 +52,9 @@ export function readHomeData(): HomeData {
 }
 
 export function getSystemMode(): 'seed' | 'live' {
-  const hasDb = Boolean(process.env.DATABASE_URL);
-  return process.env.SYSTEM_MODE === 'live' && hasDb ? 'live' : 'seed';
+  const hasDb = Boolean(getPostgresUrl());
+  if (process.env.SYSTEM_MODE === 'seed') return 'seed';
+  return hasDb ? 'live' : 'seed';
 }
 
 function normalizeProductName(name: string) {

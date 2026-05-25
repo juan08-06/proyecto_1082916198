@@ -1,8 +1,37 @@
-// Next.js auto-generated file
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
       NEXT_PUBLIC_APP_NAME?: string;
+
+      NEXT_PUBLIC_SUPABASE_URL?: string;
+      NEXT_PUBLIC_SUPABASE_ANON_KEY?: string;
+      SUPABASE_SERVICE_ROLE_KEY?: string;
+
+      NEXT_PUBLIC_PLAYAALTA_PLAYAALTASUPABASE_URL?: string;
+      NEXT_PUBLIC_PLAYAALTA_PLAYAALTASUPABASE_ANON_KEY?: string;
+      NEXT_PUBLIC_PLAYAALTA_PLAYAALTASUPABASE_PUBLISHABLE_KEY?: string;
+      NEXT_PUBLIC_PLAYAALTA_SUPABASE_URL?: string;
+      NEXT_PUBLIC_PLAYAALTA_SUPABASE_ANON_KEY?: string;
+      PLAYAALTA_SUPABASE_URL?: string;
+      PLAYAALTA_SUPABASE_ANON_KEY?: string;
+      PLAYAALTA_SUPABASE_SERVICE_ROLE_KEY?: string;
+      PLAYAALTA_SUPABASE_PUBLISHABLE_KEY?: string;
+      PLAYAALTA_SUPABASE_SECRET_KEY?: string;
+      PLAYAALTA_SUPABASE_JWT_SECRET?: string;
+
+      DATABASE_URL?: string;
+      POSTGRES_URL?: string;
+      PLAYAALTA_POSTGRES_URL?: string;
+      PLAYAALTA_POSTGRES_PRISMA_URL?: string;
+      PLAYAALTA_POSTGRES_URL_NON_POOLING?: string;
+      PLAYAALTA_POSTGRES_HOST?: string;
+      PLAYAALTA_POSTGRES_USER?: string;
+      PLAYAALTA_POSTGRES_PASSWORD?: string;
+      PLAYAALTA_POSTGRES_DATABASE?: string;
+
+      JWT_SECRET?: string;
+      SYSTEM_MODE?: 'live' | 'seed';
+      BLOB_READ_WRITE_TOKEN?: string;
     }
   }
 }

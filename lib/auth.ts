@@ -1,9 +1,10 @@
 import { compare, hash } from 'bcryptjs';
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 import type { UserRole } from './types';
+import { getJwtSecret } from './env';
 
 function getJwtKey() {
-  const jwtSecret = process.env.JWT_SECRET;
+  const jwtSecret = getJwtSecret();
   if (!jwtSecret) {
     throw new Error('JWT_SECRET no está configurado');
   }
