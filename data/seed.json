@@ -13,11 +13,11 @@
   "products": [
     {
       "id": "22222222-2222-2222-2222-222222222222",
-      "name": "Pollo entero",
+      "name": "Punta gorda",
       "category": "Carnes",
-      "quantity": 20,
+      "quantity": 12,
       "unit": "kg",
-      "minStock": 5
+      "minStock": 6
     },
     {
       "id": "33333333-3333-3333-3333-333333333333",

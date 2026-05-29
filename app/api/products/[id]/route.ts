@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 import { assertRole } from '@/lib/withRole';
 import { deleteProduct, getProductById, updateProduct } from '@/lib/dataService';
 import { getCurrentUser } from '@/lib/withAuth';
@@ -10,6 +11,19 @@ interface Params {
   };
 }
 
+async function handleApiError(error: unknown) {
+  if (error instanceof Response) {
+    const message = (await error.text()) || error.statusText || 'Solicitud invalida';
+    return NextResponse.json({ error: message }, { status: error.status });
+  }
+
+  if (error instanceof ZodError) {
+    return NextResponse.json({ error: 'Datos invalidos para el producto.' }, { status: 400 });
+  }
+
+  return NextResponse.json({ error: 'Error interno del servidor.' }, { status: 500 });
+}
+
 export async function GET(_request: Request, { params }: Params) {
   const product = await getProductById(params.id);
   if (!product) {
@@ -19,28 +33,36 @@ export async function GET(_request: Request, { params }: Params) {
 }
 
 export async function PUT(request: Request, { params }: Params) {
-  const user = await getCurrentUser(request);
-  if (!user) {
-    return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+  try {
+    const user = await getCurrentUser(request);
+    if (!user) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+    }
+
+    assertRole(user, ['admin']);
+
+    const body = await request.json();
+    const payload = UpdateProductSchema.parse(body);
+    const product = await updateProduct(params.id, payload);
+
+    return NextResponse.json(product);
+  } catch (error) {
+    return handleApiError(error);
   }
-
-  assertRole(user, ['admin']);
-
-  const body = await request.json();
-  const payload = UpdateProductSchema.parse(body);
-  const product = await updateProduct(params.id, payload);
-
-  return NextResponse.json(product);
 }
 
 export async function DELETE(request: Request, { params }: Params) {
-  const user = await getCurrentUser(request);
-  if (!user) {
-    return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+  try {
+    const user = await getCurrentUser(request);
+    if (!user) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+    }
+
+    assertRole(user, ['admin']);
+
+    await deleteProduct(params.id);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return handleApiError(error);
   }
-
-  assertRole(user, ['admin']);
-
-  await deleteProduct(params.id);
-  return NextResponse.json({ success: true });
 }
