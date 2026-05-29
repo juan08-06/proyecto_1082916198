@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import type { Product } from '@/lib/types';
+import { CATEGORY_LABELS } from './categoryColors';
+
+const PRODUCT_UNITS = ['kg', 'g', 'L', 'ml', 'unidad', 'caja', 'bolsa'] as const;
 
 interface ProductFormProps {
   product?: Product;
@@ -20,8 +23,8 @@ interface FieldErrors {
 
 export default function ProductForm({ product, onClose, onSave }: ProductFormProps) {
   const [name, setName] = useState(product?.name ?? '');
-  const [category, setCategory] = useState(product?.category ?? '');
-  const [unit, setUnit] = useState(product?.unit ?? '');
+  const [category, setCategory] = useState(product?.category ?? 'Carnes');
+  const [unit, setUnit] = useState(product?.unit ?? 'kg');
   const [quantity, setQuantity] = useState(product?.quantity.toString() ?? '0');
   const [minStock, setMinStock] = useState(product?.minStock.toString() ?? '0');
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -30,8 +33,8 @@ export default function ProductForm({ product, onClose, onSave }: ProductFormPro
 
   useEffect(() => {
     setName(product?.name ?? '');
-    setCategory(product?.category ?? '');
-    setUnit(product?.unit ?? '');
+    setCategory(product?.category ?? 'Carnes');
+    setUnit(product?.unit ?? 'kg');
     setQuantity(product?.quantity.toString() ?? '0');
     setMinStock(product?.minStock.toString() ?? '0');
     setErrors({});
@@ -111,23 +114,29 @@ export default function ProductForm({ product, onClose, onSave }: ProductFormPro
           <div className="grid gap-1 sm:grid-cols-2 sm:gap-6">
             <div className="grid gap-1">
               <label className="text-sm font-semibold text-[#1F2937]">Categoría</label>
-              <input
-                type="text"
+              <select
                 value={category}
                 onChange={(event) => setCategory(event.target.value)}
                 className="rounded-3xl border border-[#E7E5E4] bg-[#FAFAFA] px-4 py-3 text-sm outline-none transition focus:border-[#EA580C] focus:ring-2 focus:ring-[#FDE8D5]"
-              />
+              >
+                {CATEGORY_LABELS.filter((entry) => entry !== 'Todas').map((entry) => (
+                  <option key={entry} value={entry}>{entry}</option>
+                ))}
+              </select>
               {errors.category ? <p className="text-xs text-[#B91C1C]">{errors.category}</p> : null}
             </div>
 
             <div className="grid gap-1">
               <label className="text-sm font-semibold text-[#1F2937]">Unidad</label>
-              <input
-                type="text"
+              <select
                 value={unit}
                 onChange={(event) => setUnit(event.target.value)}
                 className="rounded-3xl border border-[#E7E5E4] bg-[#FAFAFA] px-4 py-3 text-sm outline-none transition focus:border-[#EA580C] focus:ring-2 focus:ring-[#FDE8D5]"
-              />
+              >
+                {PRODUCT_UNITS.map((entry) => (
+                  <option key={entry} value={entry}>{entry}</option>
+                ))}
+              </select>
               {errors.unit ? <p className="text-xs text-[#B91C1C]">{errors.unit}</p> : null}
             </div>
           </div>

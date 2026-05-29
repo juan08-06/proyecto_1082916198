@@ -53,8 +53,10 @@ export function readHomeData(): HomeData {
 
 export function getSystemMode(): 'seed' | 'live' {
   const hasDb = Boolean(getPostgresUrl());
+  const liveEnabled = process.env.ENABLE_LIVE_DATA_SERVICE === 'true';
+
   if (process.env.SYSTEM_MODE === 'seed') return 'seed';
-  return hasDb ? 'live' : 'seed';
+  return hasDb && liveEnabled ? 'live' : 'seed';
 }
 
 function normalizeProductName(name: string) {

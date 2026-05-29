@@ -1,5 +1,17 @@
 import { z } from 'zod';
 
+const ProductCategorySchema = z.enum([
+  'Carnes',
+  'Bebidas',
+  'Verduras',
+  'Granos',
+  'Lácteos',
+  'Condimentos',
+  'Otros',
+]);
+
+const ProductUnitSchema = z.enum(['kg', 'g', 'L', 'ml', 'unidad', 'caja', 'bolsa']);
+
 export const HomeDataSchema = z.object({
   hero: z.object({
     title: z.string().min(1),
@@ -22,10 +34,10 @@ export const AppConfigSchema = z.object({
 
 export const ProductSchema = z.object({
   id: z.string().uuid().optional(),
-  name: z.string().min(1),
-  category: z.string().min(1),
+  name: z.string().trim().min(1),
+  category: ProductCategorySchema,
   quantity: z.number().int().min(0),
-  unit: z.string().min(1),
+  unit: ProductUnitSchema,
   minStock: z.number().int().min(0),
 });
 

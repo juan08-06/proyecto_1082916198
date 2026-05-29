@@ -20,9 +20,10 @@ interface InventoryShellProps {
     role: UserRole;
   };
   initialProducts: Product[];
+  systemMode: 'seed' | 'live';
 }
 
-export default function InventoryShell({ user, initialProducts }: InventoryShellProps) {
+export default function InventoryShell({ user, initialProducts, systemMode }: InventoryShellProps) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Todas');
@@ -101,6 +102,24 @@ export default function InventoryShell({ user, initialProducts }: InventoryShell
 
   const refreshProducts = () => setRefreshKey((current) => current + 1);
 
+  const extractErrorMessage = async (response: Response, fallback: string) => {
+    try {
+      const data = await response.json() as { error?: string };
+      if (data?.error) return data.error;
+    } catch {
+      // ignore json parsing errors and fallback to text
+    }
+
+    try {
+      const text = await response.text();
+      if (text) return text;
+    } catch {
+      // ignore text parsing errors and keep fallback
+    }
+
+    return fallback;
+  };
+
   const handleSaveProduct = async (productData: Omit<Product, 'id'>) => {
     try {
       const method = formMode === 'create' ? 'POST' : 'PUT';
@@ -113,8 +132,8 @@ export default function InventoryShell({ user, initialProducts }: InventoryShell
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'No se pudo guardar el producto.');
+        const errorMessage = await extractErrorMessage(response, 'No se pudo guardar el producto.');
+        throw new Error(errorMessage);
       }
 
       closeModals();
@@ -135,8 +154,8 @@ export default function InventoryShell({ user, initialProducts }: InventoryShell
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'No se pudo eliminar el producto.');
+        const errorMessage = await extractErrorMessage(response, 'No se pudo eliminar el producto.');
+        throw new Error(errorMessage);
       }
 
       refreshProducts();
@@ -157,8 +176,8 @@ export default function InventoryShell({ user, initialProducts }: InventoryShell
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'No se pudo registrar la entrada.');
+        const errorMessage = await extractErrorMessage(response, 'No se pudo registrar la entrada.');
+        throw new Error(errorMessage);
       }
 
       closeModals();
@@ -188,7 +207,9 @@ export default function InventoryShell({ user, initialProducts }: InventoryShell
               </div>
             </div>
 
-            <SeedModeBanner message="El modo seed está activo y muestra los 6 productos demo con Sal en alerta." />
+            {systemMode === 'seed' ? (
+              <SeedModeBanner message="El modo seed está activo y muestra los 6 productos demo con Sal en alerta." />
+            ) : null}
           </div>
 
           <AlertBanner refreshKey={refreshKey} />
